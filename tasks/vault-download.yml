@@ -1,0 +1,32 @@
+#
+# Downloads the Vault binary
+#
+---
+
+- name: vault | check if file is downloaded
+  become: false
+  stat:
+    path: "{{ base_dir['downloads'] }}/{{ package_name_vault }}.zip"
+  register: package_status_vault
+
+- name: vault | download package
+  block:
+
+  - name: vault | get package checksum
+    run_once: true
+    become: false
+    local_action: shell curl -s "{{ checksum_url_vault }}" | grep -i "{{ package_name_vault }}.zip" | awk '{print $1}'
+    args:
+      warn: false
+    register: sha256_vault
+
+  - name: vault | download package
+    become: false
+    get_url:
+      url: "{{ package_url_vault }}"
+      dest: "{{ base_dir['downloads'] }}"
+      checksum: "sha256:{{ sha256_vault['stdout'] }}"
+      validate_certs: false
+    register: download_status_vault
+
+  when: not package_status_vault['stat']['exists']

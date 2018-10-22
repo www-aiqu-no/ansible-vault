@@ -1,0 +1,12 @@
+---
+#
+## systemd/CoreOS Specific parameters
+
+base_dir:
+  downloads: '/tmp'
+  packages: '/opt'
+  binaries: '/opt/bin'
+  configs: '/etc'
+  systemd: '/etc/systemd/system'
+  data: '/var/lib'
+  logs: '/var/log'

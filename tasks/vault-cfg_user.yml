@@ -1,0 +1,15 @@
+#
+# Configures the Vault server user
+#
+---
+
+- name: vault | create application user
+  become: true
+  user:
+    name: "{{ bin_name['vault'] }}"
+    comment: "{{ bin_name['vault'] }}"
+    state: present
+    system: true
+    shell: /bin/false
+    create_home: true
+    home: "{{ base_dir['configs'] }}/{{ bin_name['vault'] }}.d"

@@ -1,0 +1,27 @@
+#
+# Installs the Vault binary
+#
+---
+
+- name: vault | create installation folders
+  become: true
+  file:
+    path: "{{ base_dir['packages'] }}/{{ bin_name['vault'] }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: vault | extract binary
+  become: true
+  unarchive:
+    src: "{{ base_dir['downloads'] }}/{{ package_name_vault }}.zip"
+    dest: "{{ base_dir['packages'] }}/{{ bin_name['vault'] }}"
+    remote_src: yes
+
+- name: vault | symlink binary
+  become: true
+  file:
+    src: "{{ base_dir['packages'] }}/{{ bin_name['vault'] }}/{{ bin_name['vault'] }}"
+    path: "{{ base_dir['binaries'] }}/{{ bin_name['vault'] }}"
+    state: link

@@ -1,0 +1,9 @@
+---
+#  Required Inputs
+# ============================================
+
+vault:
+  version: "0.11.3"
+  storage: "consul"
+  server: true
+  ui: true

@@ -1,0 +1,12 @@
+---
+
+- name: reload_systemd_daemon
+  become: true
+  systemd:
+    daemon_reload: yes
+
+- name: restart_unit_vault
+  become: true
+  systemd:
+    name: vault
+    state: restarted
