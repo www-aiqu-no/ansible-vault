@@ -12,13 +12,14 @@ ConditionFileNotEmpty={{ base_dir['configs'] }}/{{ bin_name['vault'] }}.d/50-vau
 [Service]
 KillMode=process
 KillSignal=SIGINT
-ExecStart={{ base_dir['binaries'] }}/{{ bin_name['vault'] }} server -config {{ base_dir['configs'] }}/{{ bin_name['vault'] }}.d/
+ExecStart={{ base_dir['binaries'] }}/{{ bin_name['vault'] }} server -config {{ base_dir['configs'] }}/{{ bin_name['vault'] }}.d
 ExecReload=/bin/kill -HUP $MAINPID
 Restart=on-failure
 RestartSec=2
 StartLimitBurst=3
 StartLimitInterval=10
 LimitNOFILE=65536
+LimitMEMLOCK=infinity
 
 [Install]
 WantedBy=multi-user.target
