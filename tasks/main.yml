@@ -15,7 +15,6 @@
     tags: install
 
   - block:
-    tags: configure
 
     - include: vault-cfg_user.yml
       tags: optional

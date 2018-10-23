@@ -8,8 +8,8 @@
   file:
     path: "{{ item }}"
     state: directory
-    owner: "bin_name['vault']"
-    group: "bin_name['vault']"
+    owner: "{{ bin_name['vault'] }}"
+    group: "{{ bin_name['vault'] }}"
     mode: 0755
   loop:
   - "{{ base_dir['logs'] }}/{{ bin_name['vault'] }}"
