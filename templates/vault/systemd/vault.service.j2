@@ -12,9 +12,15 @@ ConditionFileNotEmpty={{ base_dir['configs'] }}/{{ bin_name['vault'] }}.d/50-vau
 [Service]
 User={{ bin_name['vault'] }}
 Group={{ bin_name['vault'] }}
+PermissionsStartOnly=true
+ExecStartPre=-/bin/mkdir -p {{ base_dir['binaries'] }}/{{ bin_name['vault'] }}
+ExecStartPre=/bin/chown -R {{ bin_name['vault'] }}:{{ bin_name['vault'] }} {{ base_dir['binaries'] }}/{{ bin_name['vault'] }}
+PidFile={{ base_dir['binaries'] }}/{{ bin_name['vault'] }}/{{ bin_name['vault'] }}.pid
 KillMode=process
 KillSignal=SIGINT
-ExecStart={{ base_dir['binaries'] }}/{{ bin_name['vault'] }} server -config {{ base_dir['configs'] }}/{{ bin_name['vault'] }}.d
+ExecStart={{ base_dir['binaries'] }}/{{ bin_name['vault'] }} server \
+    -config {{ base_dir['configs'] }}/{{ bin_name['vault'] }}.d \
+    -pid-file={{ base_dir['binaries'] }}/{{ bin_name['vault'] }}/{{ bin_name['vault'] }}.pid
 ExecReload=/bin/kill -HUP $MAINPID
 Restart=on-failure
 RestartSec=2
