@@ -19,8 +19,7 @@ PidFile={{ base_dir['pid'] }}/{{ bin_name['vault'] }}/{{ bin_name['vault'] }}.pi
 KillMode=process
 KillSignal=SIGINT
 ExecStart={{ base_dir['binaries'] }}/{{ bin_name['vault'] }} server \
-    -config {{ base_dir['configs'] }}/{{ bin_name['vault'] }}.d \
-    -pid-file={{ base_dir['pid'] }}/{{ bin_name['vault'] }}/{{ bin_name['vault'] }}.pid
+    -config {{ base_dir['configs'] }}/{{ bin_name['vault'] }}.d
 ExecReload=/bin/kill -HUP $MAINPID
 Restart=on-failure
 RestartSec=2
