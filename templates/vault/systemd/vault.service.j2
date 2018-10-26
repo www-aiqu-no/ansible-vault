@@ -10,9 +10,10 @@ After=network-online.target
 ConditionFileNotEmpty={{ base_dir['configs'] }}/{{ bin_name['vault'] }}.d/50-vault.hcl
 
 [Service]
+PermissionsStartOnly=True
 User={{ bin_name['vault'] }}
 Group={{ bin_name['vault'] }}
-RuntimeDirectory={{ base_dir['pid'] }}/{{ bin_name['vault'] }}
+RuntimeDirectory={{ bin_name['vault'] }}
 RuntimeDirectoryMode=0755
 PidFile={{ base_dir['pid'] }}/{{ bin_name['vault'] }}/{{ bin_name['vault'] }}.pid
 KillMode=process
