@@ -10,6 +10,8 @@ After=network-online.target
 ConditionFileNotEmpty={{ base_dir['configs'] }}/{{ bin_name['vault'] }}.d/50-vault.hcl
 
 [Service]
+User={{ bin_name['vault'] }}
+Group={{ bin_name['vault'] }}
 KillMode=process
 KillSignal=SIGINT
 ExecStart={{ base_dir['binaries'] }}/{{ bin_name['vault'] }} server -config {{ base_dir['configs'] }}/{{ bin_name['vault'] }}.d
