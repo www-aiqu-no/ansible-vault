@@ -1,6 +1,3 @@
-#
-# Downloads the Vault binary
-#
 ---
 
 - name: vault | check if file is downloaded
@@ -9,9 +6,7 @@
     path: "{{ base_dir['downloads'] }}/{{ package_name_vault }}.zip"
   register: package_status_vault
 
-- name: vault | download package
-  block:
-
+- block:
   - name: vault | get package checksum
     run_once: true
     become: false

@@ -1,0 +1,19 @@
+---
+
+- name: vault | create group
+  become: true
+  group:
+    name: vault
+    state: present
+
+- name: vault | create user
+  become: true
+  user:
+    state: present
+    name: vault
+    comment: "vault user"
+    group: vault
+    shell: /bin/false
+    system: true
+    create_home: true
+    home: "{{ base_dir['configs'] }}/vault.d"

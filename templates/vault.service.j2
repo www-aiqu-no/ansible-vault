@@ -1,0 +1,27 @@
+[Unit]
+Description="HashiCorp Vault"
+Documentation=https://vault.io/docs/
+Wants=network-online.target
+After=network-online.target
+{% if consul['enabled'] %}
+Requires=consul.service
+After=consul.service
+{% endif %}
+
+[Service]
+User=vault
+Group=vault
+ExecStart={{ base_dir['binaries'] }}/vault server \
+    -config {{ base_dir['configs'] }}/vault.d/
+ExecReload=/bin/kill -HUP $MAINPID
+KillMode=process
+KillSignal=SIGINT
+Restart=on-failure
+RestartSec=3
+StartLimitBurst=6
+StartLimitInterval=9
+LimitNOFILE=65536
+LimitMEMLOCK=infinity
+
+[Install]
+WantedBy=multi-user.target

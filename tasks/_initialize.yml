@@ -1,0 +1,11 @@
+---
+
+- name: vault | start and enable unit
+  become: true
+  notify:
+  - reload_systemd_daemon
+  systemd:
+    name: vault
+    state: started
+    enabled: yes
+    masked: no

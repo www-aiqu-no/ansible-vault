@@ -1,0 +1,19 @@
+---
+
+- name: vault | extract binary
+  become: true
+  unarchive:
+    src: "{{ base_dir['downloads'] }}/{{ package_name_vault }}.zip"
+    dest: "{{ base_dir['packages'] }}/vault/{{ vault['version'] }}"
+    owner: vault
+    group: vault
+    remote_src: yes
+
+- name: vault | symlink binary
+  become: true
+  file:
+    src: "{{ base_dir['packages'] }}/vault/{{ vault['version'] }}/vault"
+    dest: "{{ base_dir['binaries'] }}/vault"
+    owner: vault
+    group: vault
+    state: link

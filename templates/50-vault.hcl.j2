@@ -1,0 +1,26 @@
+ui           = {{ vault['ui'] | bool | lower }}
+api_addr     = "http://{{ ansible_default_ipv4['address'] }}:8200"
+cluster_addr = "http://{{ ansible_default_ipv4['address'] }}:8201"
+
+listener "tcp" {
+  address = "0.0.0.0:8200"
+  tls_disable = {{ vault['tls'] | bool | lower }}
+}
+{% if consul['enabled'] %}
+
+storage "consul" {
+  address = "{{ consul['address'] | default('127.0.0.1:8500' }}"
+  path = "vault"
+}
+{% else %}
+
+storage "file" {
+  path = "{{ base_dir_data }}/vault/data"
+}
+{% endif %}
+{% if telemetry['enabled'] %}
+
+telemetry {
+  statsite_address = "{{ telemetry['address'] | default('127.0.0.1:8125' }}"
+}
+{% endif %}

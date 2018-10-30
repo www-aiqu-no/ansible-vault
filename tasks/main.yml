@@ -1,28 +1,12 @@
 ---
-# tasks file for roles/nomad
 
-- name: only run if os is supported
-  block:
+- include: _assert.yml
 
-  - include_vars: coreos.yml
-    when: ansible_service_mgr == "systemd"
-    #when: ansible_os_family == "Container Linux by CoreOS"
+- include_vars: _coreos.yml
 
-  - include: vault-download.yml
-    tags: download
-
-  - include: vault-install.yml
-    tags: install
-
-  - block:
-
-    - include: vault-cfg_user.yml
-      tags: optional
-
-    - include: vault-cfg_systemd.yml
-      tags: optional
-
-    when: vault['server']
-
-  when: ansible_service_mgr == "systemd"
-  #when: ansible_os_family == "Container Linux by CoreOS"
+- include: _download.yml
+- include: _user.yml
+- include: _folders.yml
+- include: _install.yml
+- include: _configure.yml
+- include: _initialize.yml

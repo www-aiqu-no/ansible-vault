@@ -1,0 +1,40 @@
+---
+
+- name: vault | template base configuration files
+  become: true
+  notify:
+  - reload_systemd_daemon
+  template:
+    src: "{{ item }}.j2"
+    dest: "{{ base_dir['configs'] }}/vault.d/{{ item }}"
+    owner: "vault"
+    group: "vault"
+    mode: 0644
+  loop:
+    - 50-vault.hcl
+
+- name: vault | template unit definition
+  become: true
+  notify:
+  - restart_unit_vault
+  template:
+    src: "{{ item }}.j2"
+    dest: "{{ base_dir['systemd'] }}/{{ item }}"
+    owner: "root"
+    group: "root"
+    mode: 0644
+  loop:
+    - vault.service
+
+- name: vault | template unit definition override(s)
+  become: true
+  notify:
+  - restart_unit_vault
+  template:
+    src: "{{ item }}.j2"
+    dest: "{{ base_dir['systemd'] }}/vault.service.d/{{ item }}"
+    owner: "root"
+    group: "root"
+    mode: 0644
+  loop:
+    - directories.conf

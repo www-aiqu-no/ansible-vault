@@ -4,8 +4,6 @@
 # ============================================
 
 hashicorp_base_url: "https://releases.hashicorp.com"
-bin_name:
-  vault: "vault"
 base_architecture_map:
   amd64: "amd64"
   x86_64: "amd64"
@@ -14,6 +12,6 @@ base_architecture_map:
 # ============================================
 
 host_architecture: "{{ base_architecture_map[ansible_architecture] | lower }}" # requires 'gather_facts' on hosts
-package_name_vault: "{{ bin_name['vault'] }}_{{ vault['version'] }}_{{ ansible_system | lower }}_{{ host_architecture | lower }}"
-package_url_vault:  "{{ hashicorp_base_url }}/{{ bin_name['vault'] }}/{{ vault['version'] }}/{{ package_name_vault }}.zip"
-checksum_url_vault: "{{ hashicorp_base_url }}/{{ bin_name['vault'] }}/{{ vault['version'] }}/{{ bin_name['vault'] }}_{{ vault['version'] }}_SHA256SUMS"
+package_name_vault: "vault_{{ vault['version'] }}_{{ ansible_system | lower }}_{{ host_architecture | lower }}"
+package_url_vault:  "{{ hashicorp_base_url }}/vault/{{ vault['version'] }}/{{ package_name_vault }}.zip"
+checksum_url_vault: "{{ hashicorp_base_url }}/vault/{{ vault['version'] }}/vault_{{ vault['version'] }}_SHA256SUMS"

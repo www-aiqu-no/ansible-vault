@@ -1,0 +1,27 @@
+---
+
+- name: vault | create root folders
+  become: true
+  file:
+    dest: "{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+  loop:
+  - "{{ base_dir['binaries'] }}"
+  - "{{ base_dir['packages'] }}/vault/{{ vault['version'] }}"
+  - "{{ base_dir['systemd'] }}/vault.service.d"
+
+- name: vault | create application folders
+  become: true
+  file:
+    dest: "{{ item }}"
+    state: directory
+    owner: vault
+    group: vault
+    mode: 0755
+  loop:
+  - "{{ base_dir['data'] }}/vault"
+  - "{{ base_dir['logs'] }}/vault"
+  - "{{ base_dir['runtime'] }}/vault"
