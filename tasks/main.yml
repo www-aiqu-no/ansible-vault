@@ -2,7 +2,7 @@
 
 - include: _assert.yml
 
-- include_vars: _coreos.yml
+- include_vars: coreos.yml
 
 - include: _download.yml
 - include: _user.yml

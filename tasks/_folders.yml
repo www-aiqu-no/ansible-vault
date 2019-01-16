@@ -24,4 +24,4 @@
   loop:
   - "{{ base_dir['data'] }}/vault"
   - "{{ base_dir['logs'] }}/vault"
-  - "{{ base_dir['runtime'] }}/vault"
+  - "{{ base_dir['pid'] }}/vault"

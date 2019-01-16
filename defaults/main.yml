@@ -3,7 +3,7 @@
 # ============================================
 
 vault:
-  version: "0.11.3"
+  version: "1.0.1"
   server: true
   ui: true
   tls_disable: false

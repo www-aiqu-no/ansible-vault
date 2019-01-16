@@ -4,7 +4,7 @@ cluster_addr = "http://{{ ansible_default_ipv4['address'] }}:8201"
 
 listener "tcp" {
   address = "0.0.0.0:8200"
-  tls_disable = {{ vault['tls'] | default(false) | bool | lower }}
+  tls_disable = {{ vault['tls_disable'] | default(false) | bool | lower }}
 }
 {% if consul['enabled'] %}
 
