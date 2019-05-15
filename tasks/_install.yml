@@ -11,6 +11,8 @@
 
 - name: vault | symlink binary
   become: true
+  notify:
+  - restart_unit_vault
   file:
     src: "{{ base_dir['packages'] }}/vault/{{ vault['version'] }}/vault"
     dest: "{{ base_dir['binaries'] }}/vault"

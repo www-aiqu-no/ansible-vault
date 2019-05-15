@@ -1,12 +1,18 @@
 ---
 
 - include: _assert.yml
-
 - include_vars: coreos.yml
 
-- include: _download.yml
-- include: _user.yml
-- include: _folders.yml
-- include: _install.yml
-- include: _configure.yml
-- include: _initialize.yml
+- name: Vault | check if version already installed
+  stat:
+    path: "{{ base_dir['packages'] }}/vault/{{ vault['version'] }}"
+  register: version_exists
+
+- block:
+  - include: _download.yml
+  - include: _user.yml
+  - include: _folders.yml
+  - include: _install.yml
+  - include: _configure.yml
+  - include: _initialize.yml
+  when: not version_exists['stat']['exists']
