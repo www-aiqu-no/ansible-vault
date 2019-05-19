@@ -6,9 +6,9 @@ listener "tcp" {
   address = "0.0.0.0:8200"
   tls_disable = {{ vault_tls_disabled | default(false) | bool | lower }}
 }
-{% if consul_enabled %}
+{% if vault_consul_enabled %}
 storage "consul" {
-  address = "{{ consul_address | default('127.0.0.1:8500') }}"
+  address = "{{ vault_consul_address | default('127.0.0.1:8500') }}"
   path = "vault"
 }
 {% else %}
