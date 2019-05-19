@@ -16,8 +16,8 @@ storage "file" {
   path = "{{ os_dir_data }}/vault/data"
 }
 {% endif %}
-{% if telemetry_enabled %}
+{% if vault_telemetry_enabled %}
 telemetry {
-  statsite_address = "{{ telemetry_address | default('127.0.0.1:8125') }}"
+  statsite_address = "{{ vault_telemetry_address | default('127.0.0.1:8125') }}"
 }
 {% endif %}
