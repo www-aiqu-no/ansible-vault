@@ -2,7 +2,9 @@
 
 # Constants
 # ============================================
-
+assert_os_supported:
+- Container Linux by CoreOS
+- Ubuntu
 hashicorp_base_url: "https://releases.hashicorp.com"
 base_architecture_map:
   amd64: "amd64"
@@ -12,6 +14,6 @@ base_architecture_map:
 # ============================================
 
 host_architecture: "{{ base_architecture_map[ansible_architecture] | lower }}" # requires 'gather_facts' on hosts
-package_name_vault: "vault_{{ vault['version'] }}_{{ ansible_system | lower }}_{{ host_architecture | lower }}"
-package_url_vault:  "{{ hashicorp_base_url }}/vault/{{ vault['version'] }}/{{ package_name_vault }}.zip"
-checksum_url_vault: "{{ hashicorp_base_url }}/vault/{{ vault['version'] }}/vault_{{ vault['version'] }}_SHA256SUMS"
+package_name_vault: "vault_{{ vault_version }}_{{ ansible_system | lower }}_{{ host_architecture | lower }}"
+package_url_vault:  "{{ hashicorp_base_url }}/vault/{{ vault_version }}/{{ package_name_vault }}.zip"
+checksum_url_vault: "{{ hashicorp_base_url }}/vault/{{ vault_version }}/vault_{{ vault_version }}_SHA256SUMS"

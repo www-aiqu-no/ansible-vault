@@ -16,4 +16,4 @@
     shell: /bin/false
     system: true
     create_home: true
-    home: "{{ base_dir['configs'] }}/vault.d"
+    home: "{{ os_dir_config }}/vault.d"

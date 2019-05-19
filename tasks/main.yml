@@ -1,18 +1,38 @@
 ---
 
-- include: _assert.yml
-- include_vars: coreos.yml
+# ==============================================================================
+#  Check if os is supported by role
+# ==============================================================================
+
+- include: assert_os.yml
+
+# ==============================================================================
+#  Include variables based on operating system
+# ==============================================================================
+
+- include_vars: default.yml
+
+# ==============================================================================
+#  Install only if requested version doesn't already exist
+# ==============================================================================
+
+#- include: assert_installed.yml
 
 - name: Vault | check if version already installed
   stat:
-    path: "{{ base_dir['packages'] }}/vault/{{ vault['version'] }}"
+    path: "{{ os_dir_packages }}/vault/{{ vault_version }}"
   register: version_exists
 
 - block:
-  - include: _download.yml
-  - include: _user.yml
-  - include: _folders.yml
-  - include: _install.yml
-  - include: _configure.yml
-  - include: _initialize.yml
+  - include: download.yml
+  - include: user.yml
+  - include: folders.yml
+  - include: install.yml
   when: not version_exists['stat']['exists']
+
+# ==============================================================================
+#  Configure service
+# ==============================================================================
+
+- include: configure.yml
+- include: initialize.yml

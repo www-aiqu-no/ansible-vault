@@ -6,7 +6,7 @@
   - reload_systemd_daemon
   template:
     src: "{{ item }}.j2"
-    dest: "{{ base_dir['configs'] }}/vault.d/{{ item }}"
+    dest: "{{ os_dir_config }}/vault.d/{{ item }}"
     owner: "vault"
     group: "vault"
     mode: 0644
@@ -19,7 +19,7 @@
   - restart_unit_vault
   template:
     src: "{{ item }}.j2"
-    dest: "{{ base_dir['systemd'] }}/{{ item }}"
+    dest: "{{ os_dir_systemd }}/{{ item }}"
     owner: "root"
     group: "root"
     mode: 0644
@@ -32,7 +32,7 @@
   - restart_unit_vault
   template:
     src: "{{ item }}.j2"
-    dest: "{{ base_dir['systemd'] }}/vault.service.d/{{ item }}"
+    dest: "{{ os_dir_systemd }}/vault.service.d/{{ item }}"
     owner: "root"
     group: "root"
     mode: 0644

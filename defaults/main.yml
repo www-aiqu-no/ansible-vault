@@ -2,6 +2,16 @@
 #  Required Inputs
 # ============================================
 
+vault_version: "1.1.2"
+vault_server_enabled: true
+vault_ui_enabled: true
+vault_tls_disabled: false
+vault_consul_enabled: false
+vault_consul_address: "127.0.0.1:8500"
+vault_telemetry_enabled: false
+vault_telemetry_address: "127.0.0.1:8125"
+
+# Legacy
 vault:
   version: "1.1.2"
   server: true

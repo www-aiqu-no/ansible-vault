@@ -9,9 +9,9 @@
     group: root
     mode: 0755
   loop:
-  - "{{ base_dir['binaries'] }}"
-  - "{{ base_dir['packages'] }}/vault/{{ vault['version'] }}"
-  - "{{ base_dir['systemd'] }}/vault.service.d"
+  - "{{ os_dir_binaries }}"
+  - "{{ os_dir_packages }}/vault/{{ vault_version }}"
+  - "{{ os_dir_systemd }}/vault.service.d"
 
 - name: vault | create application folders
   become: true
@@ -22,6 +22,6 @@
     group: vault
     mode: 0755
   loop:
-  - "{{ base_dir['data'] }}/vault"
-  - "{{ base_dir['logs'] }}/vault"
-  - "{{ base_dir['pid'] }}/vault"
+  - "{{ os_dir_data }}/vault"
+  - "{{ os_dir_logs }}/vault"
+  - "{{ os_dir_runtime }}/vault"

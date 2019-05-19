@@ -3,16 +3,12 @@ Description="HashiCorp Vault"
 Documentation=https://vault.io/docs/
 Wants=network-online.target
 After=network-online.target
-{% if consul['enabled'] %}
-Requires=consul.service
-After=consul.service
-{% endif %}
 
 [Service]
 User=vault
 Group=vault
-ExecStart={{ base_dir['binaries'] }}/vault server \
-    -config {{ base_dir['configs'] }}/vault.d/
+ExecStart={{ os_dir_binaries }}/vault server \
+    -config {{ os_dir_config }}/vault.d/
 ExecReload=/bin/kill -HUP $MAINPID
 KillMode=process
 KillSignal=SIGINT
