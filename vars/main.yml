@@ -1,19 +1,60 @@
 ---
+# ==============================================================================
+#   General settings
+# ==============================================================================
 
-# Constants
-# ============================================
-assert_os_supported:
-- Container Linux by CoreOS
-- Ubuntu
-hashicorp_base_url: "https://releases.hashicorp.com"
-base_architecture_map:
+application: "vault"
+
+os_arch_map:
   amd64: "amd64"
   x86_64: "amd64"
+  64-bit: "amd64"
 
-# Host-specific
-# ============================================
+host_arch: "{{ os_arch_map[ansible_architecture] | lower }}"
 
-host_architecture: "{{ base_architecture_map[ansible_architecture] | lower }}" # requires 'gather_facts' on hosts
-package_name_vault: "vault_{{ vault_version }}_{{ ansible_system | lower }}_{{ host_architecture | lower }}"
-package_url_vault:  "{{ hashicorp_base_url }}/vault/{{ vault_version }}/{{ package_name_vault }}.zip"
-checksum_url_vault: "{{ hashicorp_base_url }}/vault/{{ vault_version }}/vault_{{ vault_version }}_SHA256SUMS"
+# ==============================================================================
+#   Base URLs
+# ==============================================================================
+
+hashicorp_releases_url: "https://releases.hashicorp.com"
+package_name: "{{ application }}_{{ version }}_{{ ansible_system | lower }}_{{ host_arch | lower }}"
+package_url: "{{ hashicorp_releases_url }}/{{ application }}/{{ version }}/{{ package_name }}.zip"
+checksum_url: "{{ hashicorp_releases_url }}/{{ application }}/{{ version }}/{{ application }}_{{ version }}_SHA256SUMS"
+
+# ==============================================================================
+#   Default application configuration
+#     Any settings from default.yml -> 'config_overrides' will be merged with
+#     settings from this variable.
+#     Settings with no value will use defaults from consul binary.
+# ==============================================================================
+
+config: "{{ config_defaults | combine(config_overrides, recursive=true) }}"
+
+config_defaults:
+  api_addr: "https://{{ ansible_default_ipv4.address }}:8200"
+  cluster_addr: "https://{{ ansible_default_ipv4.address }}:8201"
+
+# ==============================================================================
+#   Default paths
+#   Any settings from default.yml -> 'path_overrides' will be merged with
+#   settings from this variable.
+# ==============================================================================
+
+path: "{{ path_defaults | combine(path_overrides, recursive=true) }}"
+
+path_defaults:
+  binaries: /usr/sbin
+  logs: /var/opt/log
+  packages: /opt
+  profile: /etc/profile.d
+  runtime: /var/run
+  settings: /etc/opt
+  storage: /var/opt
+  systemd: /etc/systemd/system
+  temp: /tmp
+
+# ==============================================================================
+#   custom settings
+# ==============================================================================
+# custom: "{{ custom_defaults | combine(custom_overrides, recursive=true) }}"
+# custom_defaults: {}

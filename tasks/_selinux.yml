@@ -1,0 +1,7 @@
+---
+
+- name: SELinux | SEt to permissive, only logging actions that would be blocked
+  become: true
+  selinux:
+    policy: targeted
+    state: permissive
