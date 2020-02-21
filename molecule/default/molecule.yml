@@ -1,0 +1,50 @@
+---
+
+platforms:
+  - name: mlc-vault-default
+    image: "${image_name:-centos}:${image_version:-7}"
+    command: /usr/sbin/init
+    environment:
+      container: docker
+    privileged: true
+    volumes:
+      - "/sys/fs/cgroup:/sys/fs/cgroup:rw"
+    tmpfs:
+      - /tmp
+      - /run
+    tty: true
+
+scenario:
+
+
+  name: default
+  test_sequence:
+    - lint
+    - destroy
+    - syntax
+    - create
+    - converge
+    - idempotence
+    - verify
+    - destroy
+
+# ------------------------------------------------------------------------------
+
+dependency:
+  name: galaxy
+
+driver:
+  name: docker
+
+lint:
+  name: yamllint
+
+provisioner:
+  name: ansible
+  lint:
+    name: ansible-lint
+
+verifier:
+  name: testinfra
+  lint:
+    name: flake8

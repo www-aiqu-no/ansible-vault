@@ -1,0 +1,18 @@
+---
+
+# NOTE: Only default ports for now
+- name: Firewalld | Manage settings
+  become: true
+  notify:
+    - reload_daemon
+    - restart_firewalld
+  firewalld:
+    permanent: yes
+    state: enabled
+    port: "{{ item }}"
+  loop:
+    - 7300/tcp
+    - 7301/tcp
+    - 7301/udp
+    - 8200/tcp
+    - 8201/tcp

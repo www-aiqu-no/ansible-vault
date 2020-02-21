@@ -1,8 +1,27 @@
+---
+
 galaxy_info:
+
   author: Rune Rønneseth
-  description: N/A
-  company: aiqu
-  license: GPLv2
-  min_ansible_version: 2.4
-  galaxy_tags: []
-  dependencies: []
+  description: Ansible role for deploying vault
+  company: www.aiqu.no
+  license: MIT
+
+  min_ansible_version: 2.9
+
+  platforms:
+    - name: CentOS
+      versions:
+        - 7
+        - 8
+    - name: Ubuntu
+      versions:
+        - 20.04
+        - 18.04
+
+  galaxy_tags:
+    - vault
+    - hashicorp
+    - secrets
+
+# dependencies: []

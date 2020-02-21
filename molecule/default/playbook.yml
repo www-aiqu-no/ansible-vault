@@ -1,0 +1,30 @@
+---
+
+- name: molecule role-testing
+  hosts: all
+  gather_facts: false
+
+  pre_tasks:
+    - name: Ansible and docker pre-requirements
+      become: true
+      package:
+        name:
+          - iproute
+        state: present
+
+  tasks:
+
+    - include_role:
+        name: vault
+      vars:
+        config_overrides:
+          ui: true
+          storage:
+            file:
+              path: "{{ path.storage }}/{{ application }}/data"
+          listener:
+            tcp:
+              address: "127.0.0.1:8200"
+              tls_disable: "true"
+          telemetry:
+            prometheus_retention_time: 12h

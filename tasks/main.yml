@@ -1,38 +1,175 @@
 ---
+# tasks file for vault
 
 # ==============================================================================
-#  Check if os is supported by role
+#   Pre-install
 # ==============================================================================
 
-- include: assert_os.yml
+- name: Install required packages
+  become: true
+  package:
+    name:
+      - unzip
+    state: present
+
+- name: Gather facts for populating default values
+  setup:
+    gather_subset:
+      - "!all"
+      - "network"
 
 # ==============================================================================
-#  Include variables based on operating system
+#   Folders
 # ==============================================================================
 
-- include_vars: default.yml
-
-# ==============================================================================
-#  Install only if requested version doesn't already exist
-# ==============================================================================
-
-#- include: assert_installed.yml
-
-- name: Vault | check if version already installed
+- name: Check folders
   stat:
-    path: "{{ os_dir_packages }}/vault/{{ vault_version }}"
-  register: version_exists
+    path: "{{ item }}"
+  register: folder_status
+  loop:
+    - "{{ path.binaries }}"
+    - "{{ path.logs }}/{{ application }}"
+    - "{{ path.packages }}/{{ application }}/{{ version }}"
+    - "{{ path.runtime }}/{{ application }}"
+    - "{{ path.settings }}/{{ application }}.d"
+    - "{{ path.storage }}/{{ application }}"
+    - "{{ path.systemd }}/{{ application }}.service.d"
 
-- block:
-  - include: download.yml
-  - include: user.yml
-  - include: folders.yml
-  - include: install.yml
-  when: not version_exists['stat']['exists']
+- name: Create folders
+  become: true
+  file:
+    dest: "{{ item.item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+  when: not item.stat.exists | bool
+  loop: "{{ folder_status.results }}"
 
 # ==============================================================================
-#  Configure service
+#   Download & install
 # ==============================================================================
 
-- include: configure.yml
-- include: initialize.yml
+- name: Check if version already installed
+  stat:
+    path: "{{ path.packages }}/{{ application }}/{{ version }}/{{ application }}"
+  register: installed_status
+
+- name: Installation
+  block:
+
+    - name: Check if archive exists on disk
+      stat:
+        path: "{{ path.temp }}/{{ package_name }}.zip"
+      register: archive_status
+
+    - name: Download archive
+      get_url:
+        url: "{{ package_url }}"
+        dest: "{{ path.temp }}"
+        checksum: "sha256:{{ checksum_url }}"
+        validate_certs: false
+      register: download_status
+      when: not archive_status.stat.exists
+
+    - name: Extract binary from archive
+      become: true
+      unarchive:
+        src: "{{ path.temp }}/{{ package_name }}.zip"
+        dest: "{{ path.packages }}/{{ application }}/{{ version }}"
+        remote_src: yes
+
+    - name: Symlink binary
+      become: true
+      notify:
+        - restart_unit
+      file:
+        src: "{{ path.packages }}/{{ application }}/{{ version }}/{{ application }}"
+        path: "{{ item }}"
+        state: link
+      loop:
+        - "{{ path.binaries }}/{{ application }}"
+
+  when: >
+    not installed_status.stat.exists or
+    force_install
+
+# ==============================================================================
+#   Configuration
+# ==============================================================================
+
+- name: Configure environment profile
+  become: true
+  notify:
+    - reload_daemon
+  template:
+    dest: "{{ path.profile }}/50-{{ item }}"
+    src: "{{ item }}.j2"
+    owner: "root"
+    group: "root"
+    mode: 0644
+  loop:
+    - environment.sh
+
+# Stream yaml-variables to json configuration file on disk
+- name: Configure application settings
+  become: true
+  notify:
+    - reload_daemon
+  copy:
+    content: "{{ config | to_nice_json }}"
+    dest: "{{ path.settings }}/{{ application }}.d/{{ application }}.json"
+    owner: "root"
+    group: "root"
+    mode: 0644
+
+- name: Configure systemd unit definition
+  become: true
+  notify:
+    - reload_daemon
+    - restart_unit
+  template:
+    dest: "{{ path.systemd }}/{{ application }}.service"
+    src: "service.j2"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Manage mlock
+  become: true
+  capabilities:
+    path: "{{ path.binary }}/{{ application }}"
+    capability: cap_ipc_lock=+ep
+    state: present
+  when: set_mlock
+
+# ==============================================================================
+#   (Optional) Extra configuration options
+# ==============================================================================
+
+- name: (Extra) Manage firewalld
+  block:
+    - include: _firewalld.yml
+  when: configure_firewalld
+
+- name: (Extra) Manage selinux
+  block:
+    - include: _selinux.yml
+  when: configure_selinux
+
+# ==============================================================================
+#   Post-install
+# ==============================================================================
+
+- name: Start and enable systemd unit
+  become: true
+  notify:
+    - reload_daemon
+  systemd:
+    name: "{{ application }}"
+    masked: no
+    enabled: yes
+    state: started
+
+- name: Flush handlers
+  meta: flush_handlers

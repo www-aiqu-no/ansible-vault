@@ -1,12 +1,33 @@
 ---
-#  Required Inputs
-# ============================================
+# ===============================================================================
+#  Application Settings
+#  Redefine these variables to configure application deployment
+# ===============================================================================
 
-vault_version: "1.1.2"
-vault_server_enabled: true
-vault_ui_enabled: true
-vault_tls_disabled: false
-vault_consul_enabled: false
-vault_consul_address: "127.0.0.1:8500"
-vault_telemetry_enabled: false
-vault_telemetry_address: "127.0.0.1:8125"
+version: "1.3.2"
+
+# TODO: Not yet implemented
+# service_user: root
+
+# Reinstall if already installed
+force_install: false
+
+# Manage mlock settings outside of service definition (Linux)
+# See https://www.vaultproject.io/docs/configuration/index.html
+set_mlock: false
+
+# See https://www.consul.io/docs/agent/options.html
+# Add custom settings to override default application settings
+config_overrides: {}
+#  Example: ui: true
+
+# See http://www.pathname.com/fhs/pub/
+# Add custom settings to override default path settings
+path_overrides: {}
+
+# ===============================================================================
+#  Extra settings
+# ===============================================================================
+
+configure_firewalld: false
+configure_selinux: false
